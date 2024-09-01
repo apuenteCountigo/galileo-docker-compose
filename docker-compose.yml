@@ -18,6 +18,8 @@ services:
     ports:
       - 9092:9092
     restart: on-failure
+    volumes:
+      - ./kafka-data:/var/lib/kafka/data
     networks:
       - galileo-network
     environment:
@@ -27,6 +29,25 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  init-kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: init-kafka
+    depends_on:
+      - servicio-kafka
+    networks:
+      - galileo-network
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        # Esperar a que Kafka esté disponible
+        cub kafka-ready -b servicio-kafka:29092 1 20 && \
+        # Crear tópicos
+        kafka-topics.sh --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 3 --topic dma-operacion-creada && \
+        kafka-topics.sh --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 3 --topic traccar-operacion-creada && \
+        kafka-topics.sh --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 3 --topic operacion-almacenada
+    restart: "no"
 
   servicio-config-server:
     build: ./config-server/
