@@ -57,8 +57,7 @@ services:
     restart: on-failure
     container_name: servicio-config-server
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.5
+      - galileo-network
 
   servicio-eureka-server:
     build: ./eureka-server/
@@ -67,8 +66,9 @@ services:
     restart: on-failure
     container_name: servicio-eureka-server
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.6
+      - galileo-network
+      # galileo-network:
+      #   ipv4_address: 10.10.0.6
         #depends_on:
         #- servicio-config-server
         #- bd
@@ -79,16 +79,14 @@ services:
     restart: on-failure
     container_name: servicio-modelosbalizas
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.40
+      - galileo-network
 
   servicio-usuarios:
     build: ./usuarios/
     restart: on-failure
     container_name: servicio-usuarios
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.41
+      - galileo-network
         #       volumes:
         #           - /home/countigo/galileo-artifacts/servicio-usuarios.jar:/servicio-usuarios.jar
         #depends_on:
@@ -100,8 +98,7 @@ services:
     restart: on-failure
     container_name: servicio-empleos
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.42
+      - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-empleos.jar:/servicio-empleos.jar
         #depends_on:
@@ -114,8 +111,7 @@ services:
     restart: on-failure
     container_name: servicio-balizas
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.43
+      - galileo-network
         #volumes:
         #    - /home/countigo/galileo-artifacts/servicio-balizas.jar:/servicio-balizas.jar
         #depends_on:
@@ -127,8 +123,7 @@ services:
     restart: on-failure
     container_name: servicio-conexiones
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.44
+      - galileo-network
         # volumes:
         #    - /home/countigo/galileo-artifacts/servicio-conexiones.jar:/servicio-conexiones.jar
         #depends_on:
@@ -140,8 +135,7 @@ services:
     restart: on-failure
     container_name: servicio-posiciones
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.45
+      - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-posiciones.jar:/servicio-posiciones.jar
         #depends_on:
@@ -153,8 +147,7 @@ services:
     restart: on-failure
     container_name: servicio-objetivos
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.46
+      - galileo-network
         # volumes:
         #    - /home/countigo/galileo-artifacts/servicio-objetivos.jar:/servicio-objetivos.jar
         #depends_on:
@@ -167,8 +160,7 @@ services:
     restart: on-failure
     container_name: servicio-datosbalizas
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.47
+      - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-datosbalizas.jar:/servicio-datosbalizas.jar
         #depends_on:
@@ -181,8 +173,7 @@ services:
     restart: on-failure
     container_name: servicio-estados
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.48
+      - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-estados.jar:/servicio-estados.jar
         #depends_on:
@@ -194,8 +185,7 @@ services:
     restart: on-failure
     container_name: servicio-perfiles
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.49
+      - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-perfiles.jar:/servicio-perfiles.jar
         #depends_on:
@@ -207,8 +197,7 @@ services:
     restart: on-failure
     container_name: servicio-permisos
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.50
+      - galileo-network
         # volumes:
         #     - /home/countigo/galileo-artifacts/servicio-permisos.jar:/servicio-permisos.jar
         #depends_on:
@@ -220,8 +209,7 @@ services:
     restart: on-failure
     container_name: servicio-provincias
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.51
+      - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-provincias.jar:/servicio-provincias.jar
         #depends_on:
@@ -233,8 +221,7 @@ services:
     restart: on-failure
     container_name: servicio-unidades
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.52
+      - galileo-network
         #  volumes:
         #     - /home/countigo/galileo-artifacts/servicio-unidades.jar:/servicio-unidades.jar
         #depends_on:
@@ -246,8 +233,7 @@ services:
     restart: unless-stopped
     container_name: servicio-unidades-usuarios
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.53
+      - galileo-network
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
@@ -257,8 +243,7 @@ services:
     restart: unless-stopped
     container_name: servicio-importador
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.54
+      - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-importador.jar:/servicio-importador.jar
         #depends_on:
@@ -270,8 +255,7 @@ services:
     restart: on-failure
     container_name: servicio-operaciones
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.55
+      - galileo-network
         # volumes:
         #    - /home/countigo/galileo-artifacts/servicio-operaciones.jar:/servicio-operaciones.jar
         #depends_on:
@@ -283,9 +267,7 @@ services:
     restart: on-failure
     container_name: servicio-apis
     networks:
-      #galileo-network:
-      galileo-network:
-        ipv4_address: 10.10.0.56
+      - galileo-network
         # volumes:
         #    - /home/countigo/galileo-artifacts/servicio-apis.jar:/servicio-apis.jar
         #depends_on:
@@ -294,13 +276,19 @@ services:
         #- servicio-usuarios
         #- servicio-conexiones
 
+  servicio-dma:
+    build: ./dma/
+    restart: on-failure
+    container_name: servicio-dma
+    networks:
+      - galileo-network
+
   servicio-tipobalizas:
     build: ./tipobalizas/
     restart: on-failure
     container_name: servicio-tipobalizas
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.57
+      - galileo-network
         #volumes:
         #    - /home/countigo/galileo-artifacts/servicio-tipobalizas.jar:/servicio-tipobalizas.jar
         #depends_on:
@@ -312,8 +300,7 @@ services:
     restart: on-failure
     container_name: servicio-historicoobjetivosbalizas
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.58
+      - galileo-network
         #volumes:
         #    - /home/countigo/galileo-artifacts/servicio-historicoobjetivosbalizas.jar:/servicio-historicoobjetivosbalizas.jar
         #depends_on:
@@ -325,8 +312,7 @@ services:
     restart: on-failure
     container_name: servicio-juzgados
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.59
+      - galileo-network
         #volumes:
         #    - /home/countigo/galileo-artifacts/servicio-juzgados.jar:/servicio-juzgados.jar
         #depends_on:
@@ -338,8 +324,7 @@ services:
     restart: on-failure
     container_name: servicio-tipocontratos
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.65
+      - galileo-network
         #volumes:
         #    - /home/countigo/galileo-artifacts/servicio-juzgados.jar:/servicio-juzgados.jar
         #depends_on:
@@ -353,8 +338,7 @@ services:
     ports:
       - 9100:9100
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.60
+      - galileo-network
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
@@ -367,8 +351,7 @@ services:
     restart: on-failure
     container_name: servicio-gateway-server
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.61
+      - galileo-network
         #volumes:
         #    - /home/countigo/galileo-artifacts/gateway-server.jar:/gateway-server.jar
         #depends_on:
@@ -383,8 +366,7 @@ services:
     restart: on-failure
     container_name: servicio-trazabilidad
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.62
+      - galileo-network
         #       volumes:
         #           - /home/countigo/galileo-artifacts/servicio-usuarios.jar:/servicio-usuarios.jar
         #depends_on:
@@ -399,8 +381,7 @@ services:
     restart: on-failure
     container_name: servicio-evidencias
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.63
+      - galileo-network
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
@@ -418,8 +399,7 @@ services:
     restart: on-failure
     container_name: servicio-geocercas
     networks:
-      galileo-network:
-        ipv4_address: 10.10.0.64
+      - galileo-network
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
