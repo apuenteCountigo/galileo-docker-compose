@@ -45,9 +45,10 @@ services:
         # Esperar a que Kafka esté disponible
         cub kafka-ready -b servicio-kafka:29092 1 20 && \
         # Crear tópicos
-        /usr/bin/kafka-topics --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 3 --topic dma-operacion-creada && \
-        /usr/bin/kafka-topics --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 3 --topic traccar-operacion-creada && \
-        /usr/bin/kafka-topics --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 3 --topic operacion-almacenada
+        /usr/bin/kafka-topics --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 4 --topic dma-operacion-creada && \
+        /usr/bin/kafka-topics --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 4 --topic traccar-operacion-creada && \
+        /usr/bin/kafka-topics --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 4 --topic operacion-almacenada && \
+        /usr/bin/kafka-topics --create --bootstrap-server servicio-kafka:29092 --replication-factor 1 --partitions 4 --topic errors-notifications
     restart: "no"
 
   servicio-config-server:
@@ -69,15 +70,24 @@ services:
       - galileo-network
       # galileo-network:
       #   ipv4_address: 10.10.0.6
-        #depends_on:
-        #- servicio-config-server
-        #- bd
-        #- phpmyadmin
+      #depends_on:
+      #- servicio-config-server
+      #- bd
+      #- phpmyadmin
 
   servicio-modelosbalizas:
     build: ./modelosbalizas/
     restart: on-failure
     container_name: servicio-modelosbalizas
+    networks:
+      - galileo-network
+
+  servicio-websocket:
+    build: ./websocket/
+    ports:
+      - 8985:8985
+    restart: on-failure
+    container_name: servicio-websocket
     networks:
       - galileo-network
 
@@ -104,7 +114,6 @@ services:
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
-
 
   servicio-balizas:
     build: ./balizas/
@@ -154,7 +163,6 @@ services:
         #- servicio-config-server
         #- servicio-eureka-server
 
-
   servicio-datosbalizas:
     build: ./datosbalizas/
     restart: on-failure
@@ -166,7 +174,6 @@ services:
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
-
 
   servicio-estados:
     build: ./estados/
@@ -421,7 +428,6 @@ services:
         #           - /srv/gitlab-galileo/config:/etc/gitlab
         #           - /srv/gitlab-galileo/logs:/var/log/gitlab
         #           - /srv/gitlab-galileo/data:/var/opt/gitlab
-
 
   gitlab1:
     image: gitlab/gitlab-ce:latest
