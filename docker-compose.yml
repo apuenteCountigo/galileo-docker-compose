@@ -1,64 +1,86 @@
-version: '3.8'
+version: '3.4'  # Versión actualizada
 
 services:
+  gitea-permissions:
+    image: alpine:latest
+    container_name: gitea-permissions
+    volumes:
+      - gitea_data:/data
+      - ./galileo-properties:/repo-files
+    entrypoint: /bin/sh -c "chown -R 1000:1000 /data /repo-files"
+    networks:
+      - galileo-network-v1.1
+    restart: 'no'
+
   galileo-git:
-    image: gitea/gitea:latest
+    image: gitea/gitea:1.22
     container_name: galileo-git
+    depends_on:
+      gitea-permissions:
+        condition: service_completed_successfully
     environment:
+      - USER=git
       - USER_UID=1000
       - USER_GID=1000
-      - GITEA__database__DB_TYPE=sqlite3
-      - GITEA__database__PATH=/data/gitea/gitea.db
-      - GITEA__security__INSTALL_LOCK=true
+      - GITEA__RUN_MODE=prod
+      - GITEA__RUN_USER=git
       - GITEA__server__DOMAIN=localhost
-      - GITEA__server__ROOT_URL=http://localhost:3000/
-      - GITEA__server__HTTP_PORT=3000
+      - GITEA__server__SSH_DOMAIN=localhost
+      - GITEA__server__ROOT_URL=http://localhost:3188/
+      - GITEA__server__OFFLINE_MODE=true
+      - GITEA__server__HTTP_PORT=3080
+      - GITEA__security__INSTALL_LOCK=true
+      - GITEA__security__SECRET_KEY=euHQvDSgdlhv3FcccsnSiDCc6d1nyu6oVXDnKO4wmDDfFi8xzjyEBI7UAGTKfSLw
+      - GITEA__security__INTERNAL_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3MTg3NDYyMjl9.8fSkT65adVLsw9KOnKkKRke-Rxi0DlT6CLw5nRhdEq0
       - GITEA__service__DISABLE_REGISTRATION=true
-      - GITEA__admin__USER=galileo_user
-      - GITEA__admin__PASSWD=Galileo.12345
-      - GITEA__admin__EMAIL=galileo_user@example.com
+      - GITEA__service__REQUIRE_SIGNIN_VIEW=false
+      - GITEA__openid__ENABLE_OPENID_SIGNIN=false
+      - GITEA__openid__ENABLE_OPENID_SIGNUP=false
     ports:
-      - "3188:3000"
+      - "3188:3080"
+      - "2222:9122"
     networks:
       - galileo-network-v1.1
     volumes:
       - gitea_data:/data
-    restart: always
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck"]
+      test: ["CMD", "curl", "-f", "http://localhost:3080/api/v1/version"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
+      start_period: 60s
 
-  repo-setup:
-    image: curlimages/curl:latest
+  init-gitea:
+    image: gitea/gitea:1.22
+    container_name: init-gitea
+    user: "git"  # Ejecutar como usuario 'git'
     depends_on:
       galileo-git:
         condition: service_healthy
+    volumes:
+      - gitea_data:/data
+      - ./init-gitea.sh:/home/git/init-gitea.sh  # Montar el script en el directorio del usuario 'git'
+    working_dir: /home/git  # Establecer el directorio de trabajo al home del usuario 'git'
+    networks:
+      - galileo-network-v1.1
+    entrypoint: /bin/bash /home/git/init-gitea.sh
+    restart: 'no'
+
+  repo-setup:
+    image: curlimages/curl:latest
+    user: "1000:1000"
+    depends_on:
+      init-gitea:
+        condition: service_completed_successfully
     networks:
       - galileo-network-v1.1
     volumes:
-      - ./my-files:/repo-files
-    entrypoint: >
-      /bin/sh -c "
-      sleep 20 && \
-      REPO_EXISTS=$(curl -s -o /dev/null -w \"%{http_code}\" -u galileo_user:Galileo.12345 \
-      http://galileo-git:3000/api/v1/repos/galileo_user/galileo-config) && \
-      if [ \"$REPO_EXISTS\" -eq 404 ]; then \
-        echo 'Creating repository galileo-config...' && \
-        curl -X POST \"http://galileo_user:Galileo.12345@galileo-git:3000/api/v1/user/repos\" \
-             -H \"Content-Type: application/json\" \
-             -d '{\"name\": \"galileo-config\", \"private\": false, \"default_branch\": \"main\"}' && \
-        git clone http://galileo_user:Galileo.12345@galileo-git:3000/galileo_user/galileo-config.git && \
-        cd galileo-config && \
-        cp -r /repo-files/* . && \
-        git add . && \
-        git commit -m 'Initial commit' && \
-        git push; \
-      else \
-        echo 'Repository galileo-config already exists, skipping creation.'; \
-      fi"
+      - ./galileo-properties:/repo-files
+      - ./repo-setup.sh:/repo-setup.sh
+    entrypoint: /bin/sh /repo-setup.sh
     restart: "no"
 
 volumes:
@@ -66,4 +88,4 @@ volumes:
 
 networks:
   galileo-network-v1.1:
-    external: true
+    driver: bridge
