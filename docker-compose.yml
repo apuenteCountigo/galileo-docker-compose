@@ -70,8 +70,7 @@ services:
     restart: 'no'
 
   repo-setup:
-    image: curlimages/curl:latest
-    user: "1000:1000"
+    image: buildpack-deps:bullseye
     depends_on:
       init-gitea:
         condition: service_completed_successfully

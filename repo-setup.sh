@@ -20,7 +20,7 @@ if [ $counter -eq $max_retries ]; then
 fi
 
 REPO_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" -u galileo_user:Galileo.12345 \
-http://galileo-git:3080/api/v1/repos/galileo_user/galileo-config)
+http://galileo-git:3080/galileo_user/galileo-config)
 if [ "$REPO_EXISTS" -eq 404 ]; then
   echo "Creating repository galileo-config..."
   curl -X POST "http://galileo_user:Galileo.12345@galileo-git:3080/api/v1/user/repos" \
