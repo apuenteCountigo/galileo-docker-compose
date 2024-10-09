@@ -25,15 +25,20 @@ if [ "$REPO_EXISTS" -eq 404 ]; then
   echo "Creating repository galileo-config..."
   curl -X POST "http://galileo_user:Galileo.12345@galileo-git:3080/api/v1/user/repos" \
        -H "Content-Type: application/json" \
-       -d '{"name": "galileo-config", "private": false, "default_branch": "main"}'
-  git clone http://galileo_user:Galileo.12345@galileo-git:3080/galileo_user/galileo-config.git
+       -d '{"name": "galileo-config", "private": false, "default_branch": "main"}' &&
+  ls &&
+  echo "RAIZ" &&
+  cd data
+  ls
+  echo "Listando a /data"
+  git clone http://galileo_user:Galileo.12345@galileo-git:3080/galileo_user/galileo-config.git &&
   cd galileo-config
   cp -r /repo-files/* .
   git config --global user.email "galileo_user@example.com"
   git config --global user.name "galileo_user"
   git add .
   git commit -m "Initial commit"
-  git push
+  git push -u origin main
 else
   echo "Repository galileo-config already exists, skipping creation."
 fi
