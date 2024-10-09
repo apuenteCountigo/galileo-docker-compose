@@ -1,91 +1,464 @@
-version: '3.4'  # Versión actualizada
-
+version: "3.8"
 services:
-  gitea-permissions:
-    image: alpine:latest
-    container_name: gitea-permissions
-    volumes:
-      - ./gitea_data:/data
-      - ./galileo-properties:/repo-files
-    entrypoint: /bin/sh -c "chown -R 1000:1000 /data /repo-files"
-    networks:
-      - galileo-network-v1.1
-    restart: 'no'
-
-  galileo-git:
-    image: gitea/gitea:1.22
-    container_name: galileo-git
-    depends_on:
-      gitea-permissions:
-        condition: service_completed_successfully
-    environment:
-      - USER=git
-      - USER_UID=1000
-      - USER_GID=1000
-      - GITEA__RUN_MODE=prod
-      - GITEA__RUN_USER=git
-      - GITEA__server__DOMAIN=localhost
-      - GITEA__server__SSH_DOMAIN=localhost
-      - GITEA__server__ROOT_URL=http://localhost:3188/
-      - GITEA__server__OFFLINE_MODE=true
-      - GITEA__server__HTTP_PORT=3080
-      - GITEA__security__INSTALL_LOCK=true
-      - GITEA__security__SECRET_KEY=euHQvDSgdlhv3FcccsnSiDCc6d1nyu6oVXDnKO4wmDDfFi8xzjyEBI7UAGTKfSLw
-      - GITEA__security__INTERNAL_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3MTg3NDYyMjl9.8fSkT65adVLsw9KOnKkKRke-Rxi0DlT6CLw5nRhdEq0
-      - GITEA__service__DISABLE_REGISTRATION=true
-      - GITEA__service__REQUIRE_SIGNIN_VIEW=false
-      - GITEA__openid__ENABLE_OPENID_SIGNIN=false
-      - GITEA__openid__ENABLE_OPENID_SIGNUP=false
+  servicio-config-server:
+    build: ./config-server/
+    image: servicio-config-server:1.1.0
     ports:
-      - "3188:3080"
-      - "2222:9122"
-    networks:
-      - galileo-network-v1.1
-    volumes:
-      - ./gitea_data:/data
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      - 8888:8888
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3080/api/v1/version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  init-gitea:
-    image: gitea/gitea:1.22
-    container_name: init-gitea
-    user: "git"  # Ejecutar como usuario 'git'
-    depends_on:
-      galileo-git:
-        condition: service_healthy
-    volumes:
-      - ./gitea_data:/data
-      - ./init-gitea.sh:/home/git/init-gitea.sh  # Montar el script en el directorio del usuario 'git'
-    working_dir: /home/git  # Establecer el directorio de trabajo al home del usuario 'git'
+    container_name: servicio-config-server
     networks:
-      - galileo-network-v1.1
-    entrypoint: /bin/bash /home/git/init-gitea.sh
-    restart: 'no'
+      - galileo-network
 
-  repo-setup:
-    image: buildpack-deps:bullseye
-    depends_on:
-      init-gitea:
-        condition: service_completed_successfully
+  servicio-eureka-server:
+    build: ./eureka-server/
+    image: servicio-eureka-server:1.1.0
+    ports:
+      - 8761:8761
+    restart: on-failure
+    container_name: servicio-eureka-server
     networks:
-      - galileo-network-v1.1
-    volumes:
-      - ./gitea_data:/data
-      - ./galileo-properties:/repo-files
-      - ./repo-setup.sh:/repo-setup.sh
-    entrypoint: /bin/sh /repo-setup.sh
-    restart: "no"
+      - galileo-network
+      # galileo-network:
+      #   ipv4_address: 10.10.0.6
+      #depends_on:
+      #- servicio-config-server
+      #- bd
+      #- phpmyadmin
+    
+  servicio-usuarios:
+    build: ./usuarios/
+    image: servicio-usuarios:1.1.0
+    restart: on-failure
+    container_name: servicio-usuarios
+    networks:
+      - galileo-network
+        #       volumes:
+        #           - /home/countigo/galileo-artifacts/servicio-usuarios.jar:/servicio-usuarios.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
 
-volumes:
-  gitea_data:
+  servicio-oauth:
+    build: ./oauth2/
+    image: servicio-oauth:1.1.0
+    restart: on-failure
+    container_name: servicio-oauth
+    ports:
+      - 9100:9100
+    networks:
+      - galileo-network
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+        #- servicio-usuarios
+
+  servicio-empleos:
+    build: ./empleos/
+    restart: on-failure
+    container_name: servicio-empleos
+    networks:
+      - galileo-network
+        #volumes:
+        #- /home/countigo/galileo-artifacts/servicio-empleos.jar:/servicio-empleos.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-balizas:
+    build: ./balizas/
+    restart: on-failure
+    container_name: servicio-balizas
+    networks:
+      - galileo-network
+        #volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-balizas.jar:/servicio-balizas.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-conexiones:
+    build: ./conexiones/
+    restart: on-failure
+    container_name: servicio-conexiones
+    networks:
+      - galileo-network
+        # volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-conexiones.jar:/servicio-conexiones.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-posiciones:
+    build: ./posiciones/
+    restart: on-failure
+    container_name: servicio-posiciones
+    networks:
+      - galileo-network
+        #volumes:
+        #- /home/countigo/galileo-artifacts/servicio-posiciones.jar:/servicio-posiciones.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-objetivos:
+    build: ./objetivos/
+    restart: on-failure
+    container_name: servicio-objetivos
+    networks:
+      - galileo-network
+        # volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-objetivos.jar:/servicio-objetivos.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-datosbalizas:
+    build: ./datosbalizas/
+    restart: on-failure
+    container_name: servicio-datosbalizas
+    networks:
+      - galileo-network
+        #volumes:
+        #- /home/countigo/galileo-artifacts/servicio-datosbalizas.jar:/servicio-datosbalizas.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-estados:
+    build: ./estados/
+    restart: on-failure
+    container_name: servicio-estados
+    networks:
+      - galileo-network
+        #volumes:
+        #- /home/countigo/galileo-artifacts/servicio-estados.jar:/servicio-estados.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-perfiles:
+    build: ./perfiles/
+    restart: on-failure
+    container_name: servicio-perfiles
+    networks:
+      - galileo-network
+        #volumes:
+        #- /home/countigo/galileo-artifacts/servicio-perfiles.jar:/servicio-perfiles.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-permisos:
+    build: ./permisos/
+    restart: on-failure
+    container_name: servicio-permisos
+    networks:
+      - galileo-network
+        # volumes:
+        #     - /home/countigo/galileo-artifacts/servicio-permisos.jar:/servicio-permisos.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-provincias:
+    build: ./provincias/
+    restart: on-failure
+    container_name: servicio-provincias
+    networks:
+      - galileo-network
+        #volumes:
+        #- /home/countigo/galileo-artifacts/servicio-provincias.jar:/servicio-provincias.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-unidades:
+    build: ./unidades/
+    restart: on-failure
+    container_name: servicio-unidades
+    networks:
+      - galileo-network
+        #  volumes:
+        #     - /home/countigo/galileo-artifacts/servicio-unidades.jar:/servicio-unidades.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-unidades-usuarios:
+    build: ./unidadesusuarios/
+    restart: unless-stopped
+    container_name: servicio-unidades-usuarios
+    networks:
+      - galileo-network
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-importador:
+    build: ./importador/
+    restart: unless-stopped
+    container_name: servicio-importador
+    networks:
+      - galileo-network
+        #volumes:
+        #- /home/countigo/galileo-artifacts/servicio-importador.jar:/servicio-importador.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-operaciones:
+    build: ./operaciones/
+    restart: on-failure
+    container_name: servicio-operaciones
+    networks:
+      - galileo-network
+        # volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-operaciones.jar:/servicio-operaciones.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-apis:
+    build: ./apis/
+    restart: on-failure
+    container_name: servicio-apis
+    networks:
+      - galileo-network
+        # volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-apis.jar:/servicio-apis.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+        #- servicio-usuarios
+        #- servicio-conexiones
+
+  servicio-dma:
+    build: ./dma/
+    restart: on-failure
+    container_name: servicio-dma
+    networks:
+      - galileo-network
+
+  servicio-tipobalizas:
+    build: ./tipobalizas/
+    restart: on-failure
+    container_name: servicio-tipobalizas
+    networks:
+      - galileo-network
+        #volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-tipobalizas.jar:/servicio-tipobalizas.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-historicoobjetivosbalizas:
+    build: ./historicoobjetivosbalizas/
+    restart: on-failure
+    container_name: servicio-historicoobjetivosbalizas
+    networks:
+      - galileo-network
+        #volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-historicoobjetivosbalizas.jar:/servicio-historicoobjetivosbalizas.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-juzgados:
+    build: ./juzgados/
+    restart: on-failure
+    container_name: servicio-juzgados
+    networks:
+      - galileo-network
+        #volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-juzgados.jar:/servicio-juzgados.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-tipocontratos:
+    build: ./tipocontratos/
+    restart: on-failure
+    container_name: servicio-tipocontratos
+    networks:
+      - galileo-network
+        #volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-juzgados.jar:/servicio-juzgados.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-gateway-server:
+    build: ./gateway/
+    ports:
+      - 8090:8090
+    restart: on-failure
+    container_name: servicio-gateway-server
+    networks:
+      - galileo-network
+        #volumes:
+        #    - /home/countigo/galileo-artifacts/gateway-server.jar:/gateway-server.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+        #- servicio-usuarios
+        #- servicio-oauth
+        #- servicio-unidades
+
+  servicio-trazabilidad:
+    build: ./trazabilidad/
+    restart: on-failure
+    container_name: servicio-trazabilidad
+    networks:
+      - galileo-network
+        #       volumes:
+        #           - /home/countigo/galileo-artifacts/servicio-usuarios.jar:/servicio-usuarios.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+        #- servicio-usuarios
+        #- servicio-oauth
+        #- servicio-gateway-server
+
+  servicio-evidencias:
+    build: ./evidencias/
+    restart: on-failure
+    container_name: servicio-evidencias
+    networks:
+      - galileo-network
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      #volumes:
+      #- /home/countigo/galileo-artifacts/servicio-datosbalizas.jar:/servicio-datosbalizas.jar
+      #depends_on:
+      #- servicio-config-server
+      #- servicio-eureka-server
+      #- servicio-usuarios
+      #- servicio-oauth
+      #- servicio-gateway-server
+
+  servicio-geocercas:
+    build: ./geocercas/
+    restart: on-failure
+    container_name: servicio-geocercas
+    networks:
+      - galileo-network
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+        #- servicio-gateway-server
+
+        #    gitlab:
+        #        image: gitlab/gitlab-ce:latest
+        #        restart: always
+        #        container_name: galileo-gitlab-config
+        #        networks:
+        ##          - galileo-network
+        #          galileo-network:
+        #            ipv4_address: 10.10.0.10
+        #        ports:
+        #           - "1880:80"
+        #           - "1443:443"
+        #           - "1222:22"
+        #        volumes:
+        #           - /srv/gitlab-galileo/config:/etc/gitlab
+        #           - /srv/gitlab-galileo/logs:/var/log/gitlab
+        #           - /srv/gitlab-galileo/data:/var/opt/gitlab
+
+  gitlab1:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    container_name: galileo-gitlab-config1
+    networks:
+      #          - galileo-network
+      galileo-network:
+        ipv4_address: 10.10.0.10
+    ports:
+      - "1880:80"
+      - "1443:443"
+      - "1222:22"
+    volumes:
+      - /srv/gitlab-galileo-config-1/config:/etc/gitlab
+      - /srv/gitlab-galileo-config-1/logs:/var/log/gitlab
+      - /srv/gitlab-galileo-config-1/data:/var/opt/gitlab
+
+  bd:
+    image: mysql:latest
+    restart: on-failure
+    container_name: galileo_bd
+    command: --default-authentication-plugin=mysql_native_password --max_connections=20000
+    environment:
+      - MYSQL_ROOT_PASSWORD=76xNPTa2022
+      - MYSQL_DATABASE=galileo_bd
+      - MYSQL_USER=galileo_bd
+      - MYSQL_PASSWORD=xD9MbjJLesUId4QX
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./bd:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    networks:
+      #            - galileo-network 
+      galileo-network:
+        ipv4_address: 10.10.0.3
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: on-failure
+    ports:
+      - 8585:80
+    environment:
+      - PMA_HOST=bd
+      - MYSQL_ROOT_PASSWORD=76xNPTa2022
+    networks:
+      galileo-network:
+        ipv4_address: 10.10.0.80
+
+  servicio-web:
+    #image: galileo/servicio-web
+    build: ./web/galileo_servicio_web/
+    container_name: servicio-web
+    restart: on-failure
+    # volumes:
+    #   - ./app/default.conf:/etc/nginx/conf.d/default.conf
+    #            - ./app/code:/usr/share/nginx/html
+    ports:
+      - 8079:8079
+    networks:
+      - galileo-network
+
+  #     app:
+  #         image: galileo/galileo-webapp
+  #         container_name: webapp
+  #         restart: on-failure
+  #         volumes:
+  #             -  ./app/default.conf:/etc/nginx/conf.d/default.conf
+  # #            - ./app/code:/usr/share/nginx/html
+  #         ports:
+  #             - 8089:80
+  #         networks:
+  #             - galileo-network
+  apptest:
+    image: galileo/galileo-webapptest
+    container_name: webapptest
+    restart: on-failure
+    volumes:
+      #          -  ./app/nginx.conf:/etc/nginx/nginx.conf
+      - ./app/default.conf:/etc/nginx/conf.d/default.conf
+    #            - ./app/code:/usr/share/nginx/html
+    ports:
+      - 8099:80
+    networks:
+      - galileo-network
+    #networks:
+    #galileo-network:
+    #ipam:
+    #driver: default
+    #config:
+    #- subnet: 10.10.0.0/24
 
 networks:
-  galileo-network-v1.1:
-    driver: bridge
+  galileo-network:
+    external: true
+    name: galileo-network
