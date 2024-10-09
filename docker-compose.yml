@@ -77,6 +77,47 @@ services:
         #- servicio-config-server
         #- servicio-eureka-server
 
+  servicio-objetivos:
+    build: ./objetivos/
+    image: servicio-objetivos:1.1.0
+    restart: on-failure
+    container_name: servicio-objetivos
+    networks:
+      - galileo-network
+        # volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-objetivos.jar:/servicio-objetivos.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-operaciones:
+    build: ./operaciones/
+    image: servicio-operaciones:1.1.0
+    restart: on-failure
+    container_name: servicio-operaciones
+    networks:
+      - galileo-network
+        # volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-operaciones.jar:/servicio-operaciones.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+
+  servicio-apis:
+    build: ./apis/
+    image: servicio-apis:1.1.0
+    restart: on-failure
+    container_name: servicio-apis
+    networks:
+      - galileo-network
+        # volumes:
+        #    - /home/countigo/galileo-artifacts/servicio-apis.jar:/servicio-apis.jar
+        #depends_on:
+        #- servicio-config-server
+        #- servicio-eureka-server
+        #- servicio-usuarios
+        #- servicio-conexiones
+
   servicio-empleos:
     build: ./empleos/
     restart: on-failure
@@ -85,18 +126,6 @@ services:
       - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-empleos.jar:/servicio-empleos.jar
-        #depends_on:
-        #- servicio-config-server
-        #- servicio-eureka-server
-
-  servicio-balizas:
-    build: ./balizas/
-    restart: on-failure
-    container_name: servicio-balizas
-    networks:
-      - galileo-network
-        #volumes:
-        #    - /home/countigo/galileo-artifacts/servicio-balizas.jar:/servicio-balizas.jar
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
@@ -121,18 +150,6 @@ services:
       - galileo-network
         #volumes:
         #- /home/countigo/galileo-artifacts/servicio-posiciones.jar:/servicio-posiciones.jar
-        #depends_on:
-        #- servicio-config-server
-        #- servicio-eureka-server
-
-  servicio-objetivos:
-    build: ./objetivos/
-    restart: on-failure
-    container_name: servicio-objetivos
-    networks:
-      - galileo-network
-        # volumes:
-        #    - /home/countigo/galileo-artifacts/servicio-objetivos.jar:/servicio-objetivos.jar
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
@@ -220,32 +237,6 @@ services:
         #depends_on:
         #- servicio-config-server
         #- servicio-eureka-server
-
-  servicio-operaciones:
-    build: ./operaciones/
-    restart: on-failure
-    container_name: servicio-operaciones
-    networks:
-      - galileo-network
-        # volumes:
-        #    - /home/countigo/galileo-artifacts/servicio-operaciones.jar:/servicio-operaciones.jar
-        #depends_on:
-        #- servicio-config-server
-        #- servicio-eureka-server
-
-  servicio-apis:
-    build: ./apis/
-    restart: on-failure
-    container_name: servicio-apis
-    networks:
-      - galileo-network
-        # volumes:
-        #    - /home/countigo/galileo-artifacts/servicio-apis.jar:/servicio-apis.jar
-        #depends_on:
-        #- servicio-config-server
-        #- servicio-eureka-server
-        #- servicio-usuarios
-        #- servicio-conexiones
 
   servicio-dma:
     build: ./dma/
