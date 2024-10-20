@@ -31,7 +31,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     restart: on-failure
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:1880/api/v1/version"]
+      test: ["CMD", "curl", "-f", "http://localhost:80/api/v1/version"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -388,6 +388,9 @@ services:
     #driver: default
     #config:
     #- subnet: 10.10.0.0/24
+
+volumes:
+  gitea_data:
 
 networks:
   galileo-network:
