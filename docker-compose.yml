@@ -1,7 +1,7 @@
 services:
   galileo-git:
     image: galileo/gitea:1.22
-    container_name: galileo-gitlab
+    container_name: galileo-git
     environment:
       - USER=git
       - USER_UID=1000
