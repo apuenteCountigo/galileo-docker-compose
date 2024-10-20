@@ -1,7 +1,7 @@
 services:
-  galileo-git:
+  galileo-gitlab:
     image: galileo/gitea:1.22
-    container_name: galileo-git
+    container_name: galileo-gitlab
     environment:
       - USER=git
       - USER_UID=1000
@@ -30,6 +30,12 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1880/api/v1/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   servicio-config-server:
     build: ./config-server/
