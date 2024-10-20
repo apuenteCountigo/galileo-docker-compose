@@ -1,6 +1,6 @@
 servicio-operaciones
 servicio-objetivos
-webapp
+galileo/webapp
 servicio-unidades-usuarios
 servicio-unidades
 servicio-balizas
@@ -9,12 +9,12 @@ servicio-apis
 servicio-geocercas
 servicio-conexiones
 servicio-evidencias
-servicio-importador
+galileo/servicio-importador
 servicio-oauth
 servicio-config-server
 servicio-eureka-server
-servicio-gateway-server
-servicio-trazabilidad
+galileo/servicio-gateway-server
+galileo/servicio-trazabilidad
 servicio-historicoobjetivosbalizas
 servicio-datosbalizas
 servicio-juzgados
