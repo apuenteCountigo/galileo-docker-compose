@@ -3,7 +3,7 @@
 # Nombre del archivo que contiene los nombres de las imágenes
 IMAGES_FILE="imagenes.txt"
 # Carpeta de destino para guardar las imágenes
-DEST_DIR="/home/mome/galileo-images-v1.1.0"
+DEST_DIR="/home/mome/galileo-images-v1.1.1"
 
 # Crear la carpeta de destino si no existe
 mkdir -p "$DEST_DIR"
@@ -14,8 +14,8 @@ while IFS= read -r IMAGE_NAME; do
         # Eliminar el prefijo "galileo/" del nombre de la imagen
         CLEANED_NAME="${IMAGE_NAME#galileo/}"
         OUTPUT_FILE="${DEST_DIR}/${CLEANED_NAME}_1.1.1.tar.gz"
-        echo "Guardando la imagen '$IMAGE_NAME':1.1.0 en '$OUTPUT_FILE'..."
-        docker save -o "$OUTPUT_FILE" "${IMAGE_NAME}:1.1.0"
+        echo "Guardando la imagen '$IMAGE_NAME':1.1.1 en '$OUTPUT_FILE'..."
+        docker save -o "$OUTPUT_FILE" "${IMAGE_NAME}:1.1.1"
     else
         echo "Línea vacía o nombre de imagen no válido, omitiendo..."
     fi
