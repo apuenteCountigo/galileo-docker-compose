@@ -3,7 +3,7 @@
 # Nombre del archivo que contiene los nombres de las imágenes
 IMAGES_FILE="imagenes.txt"
 # Carpeta de destino para guardar las imágenes
-DEST_DIR="/home/mome/galileo-images-v1.1.1"
+DEST_DIR="/home/mome/galileo-images-v1.1"
 
 # Crear la carpeta de destino si no existe
 mkdir -p "$DEST_DIR"
