@@ -39,7 +39,7 @@ services:
 
   servicio-config-server:
     build: ./config-server/
-    image: galileo/servicio-config-server:1.1.1
+    image: galileo/servicio-config-server:1.1.2
     ports:
       - 8888:8888
     restart: on-failure
@@ -49,7 +49,7 @@ services:
 
   servicio-eureka-server:
     build: ./eureka-server/
-    image: galileo/servicio-eureka-server:1.1.1
+    image: galileo/servicio-eureka-server:1.1.2
     ports:
       - 8761:8761
     restart: on-failure
@@ -59,7 +59,7 @@ services:
     
   servicio-usuarios:
     build: ./usuarios/
-    image: galileo/servicio-usuarios:1.1.1
+    image: galileo/servicio-usuarios:1.1.2
     restart: on-failure
     container_name: servicio-usuarios
     networks:
@@ -67,7 +67,7 @@ services:
 
   servicio-oauth:
     build: ./oauth2/
-    image: galileo/servicio-oauth:1.1.1
+    image: galileo/servicio-oauth:1.1.2
     restart: on-failure
     container_name: servicio-oauth
     ports:
@@ -77,7 +77,7 @@ services:
 
   servicio-unidades-usuarios:
     build: ./unidadesusuarios/
-    image: galileo/servicio-unidades-usuarios:1.1.1
+    image: galileo/servicio-unidades-usuarios:1.1.2
     restart: unless-stopped
     container_name: servicio-unidades-usuarios
     networks:
@@ -85,7 +85,7 @@ services:
 
   servicio-balizas:
     build: ./balizas/
-    image: galileo/servicio-balizas:1.1.1
+    image: galileo/servicio-balizas:1.1.2
     restart: on-failure
     container_name: servicio-balizas
     networks:
@@ -93,7 +93,7 @@ services:
 
   servicio-objetivos:
     build: ./objetivos/
-    image: galileo/servicio-objetivos:1.1.1
+    image: galileo/servicio-objetivos:1.1.2
     restart: on-failure
     container_name: servicio-objetivos
     networks:
@@ -101,7 +101,7 @@ services:
 
   servicio-operaciones:
     build: ./operaciones/
-    image: galileo/servicio-operaciones:1.1.1
+    image: galileo/servicio-operaciones:1.1.2
     restart: on-failure
     container_name: servicio-operaciones
     networks:
@@ -109,7 +109,7 @@ services:
 
   servicio-conexiones:
     build: ./conexiones/
-    image: galileo/servicio-conexiones:1.1.1
+    image: galileo/servicio-conexiones:1.1.2
     restart: on-failure
     container_name: servicio-conexiones
     networks:
@@ -117,7 +117,7 @@ services:
 
   servicio-apis:
     build: ./apis/
-    image: galileo/servicio-apis:1.1.1
+    image: galileo/servicio-apis:1.1.2
     restart: on-failure
     container_name: servicio-apis
     networks:
@@ -125,7 +125,7 @@ services:
 
   servicio-unidades:
     build: ./unidades/
-    image: galileo/servicio-unidades:1.1.1
+    image: galileo/servicio-unidades:1.1.2
     restart: on-failure
     container_name: servicio-unidades
     networks:
@@ -133,7 +133,7 @@ services:
 
   servicio-importador:
     build: ./importador/
-    image: galileo/servicio-importador:1.1.1
+    image: galileo/servicio-importador:1.1.2
     restart: on-failure
     container_name: servicio-importador
     networks:
@@ -141,7 +141,7 @@ services:
 
   servicio-geocercas:
     build: ./geocercas/
-    image: galileo/servicio-geocercas:1.1.1
+    image: galileo/servicio-geocercas:1.1.2
     restart: on-failure
     container_name: servicio-geocercas
     networks:
@@ -149,7 +149,7 @@ services:
 
   servicio-evidencias:
     build: ./evidencias/
-    image: galileo/servicio-evidencias:1.1.1
+    image: galileo/servicio-evidencias:1.1.2
     restart: on-failure
     container_name: servicio-evidencias
     networks:
@@ -160,7 +160,7 @@ services:
 
   servicio-empleos:
     # build: ./empleos/
-    image: galileo/servicio-empleos:1.1.1
+    image: galileo/servicio-empleos:1.1.2
     restart: on-failure
     container_name: servicio-empleos
     networks:
@@ -168,7 +168,7 @@ services:
 
   servicio-datosbalizas:
     #build: ./datosbalizas/
-    image: galileo/servicio-datosbalizas:1.1.1
+    image: galileo/servicio-datosbalizas:1.1.2
     restart: on-failure
     container_name: servicio-datosbalizas
     networks:
@@ -176,7 +176,7 @@ services:
 
   servicio-estados:
     #build: ./estados/
-    image: galileo/servicio-estados:1.1.1
+    image: galileo/servicio-estados:1.1.2
     restart: on-failure
     container_name: servicio-estados
     networks:
@@ -184,7 +184,7 @@ services:
 
   servicio-perfiles:
     #build: ./perfiles/
-    image: galileo/servicio-perfiles:1.1.1
+    image: galileo/servicio-perfiles:1.1.2
     restart: on-failure
     container_name: servicio-perfiles
     networks:
@@ -192,7 +192,7 @@ services:
 
   servicio-permisos:
     #build: ./permisos/
-    image: galileo/servicio-permisos:1.1.1
+    image: galileo/servicio-permisos:1.1.2
     restart: on-failure
     container_name: servicio-permisos
     networks:
@@ -200,7 +200,7 @@ services:
 
   servicio-provincias:
     #build: ./provincias/
-    image: galileo/servicio-provincias:1.1.1
+    image: galileo/servicio-provincias:1.1.2
     restart: on-failure
     container_name: servicio-provincias
     networks:
@@ -208,7 +208,7 @@ services:
 
   servicio-tipobalizas:
     #build: ./tipobalizas/
-    image: galileo/servicio-tipobalizas:1.1.1
+    image: galileo/servicio-tipobalizas:1.1.2
     restart: on-failure
     container_name: servicio-tipobalizas
     networks:
@@ -216,7 +216,7 @@ services:
 
   servicio-historicoobjetivosbalizas:
     #build: ./historicoobjetivosbalizas/
-    image: galileo/servicio-historicoobjetivosbalizas:1.1.1
+    image: galileo/servicio-historicoobjetivosbalizas:1.1.2
     restart: on-failure
     container_name: servicio-historicoobjetivosbalizas
     networks:
@@ -224,7 +224,7 @@ services:
 
   servicio-juzgados:
     #build: ./juzgados/
-    image: galileo/servicio-juzgados:1.1.1
+    image: galileo/servicio-juzgados:1.1.2
     restart: on-failure
     container_name: servicio-juzgados
     networks:
@@ -232,7 +232,7 @@ services:
 
   servicio-tipocontratos:
     #build: ./tipocontratos/
-    image: galileo/servicio-tipocontratos:1.1.1
+    image: galileo/servicio-tipocontratos:1.1.2
     restart: on-failure
     container_name: servicio-tipocontratos
     networks:
@@ -240,7 +240,7 @@ services:
 
   servicio-gateway-server:
     #build: ./gateway/
-    image: galileo/servicio-gateway-server:1.1.1
+    image: galileo/servicio-gateway-server:1.1.2
     ports:
       - 8090:8090
     restart: on-failure
@@ -258,7 +258,7 @@ services:
 
   servicio-trazabilidad:
     #build: ./trazabilidad/
-    image: galileo/servicio-trazabilidad:1.1.1
+    image: galileo/servicio-trazabilidad:1.1.2
     restart: on-failure
     container_name: servicio-trazabilidad
     networks:
@@ -345,7 +345,7 @@ services:
     #   bash -c "while [ ! -f /app/build_complete ]; do sleep 2; done; nginx -g 'daemon off;'"
 
   servicio-web:
-    image: galileo/webapp:1.1.1
+    image: galileo/webapp:1.1.2
     build: ./web/galileo_servicio_web/
     depends_on:
       - web-build
