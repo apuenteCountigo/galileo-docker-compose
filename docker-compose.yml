@@ -238,6 +238,14 @@ services:
     networks:
       - galileo-network
 
+  servicio-trazabilidad:
+    #build: ./trazabilidad/
+    image: galileo/servicio-trazabilidad:1.1.3
+    restart: on-failure
+    container_name: servicio-trazabilidad
+    networks:
+      - galileo-network
+
   servicio-gateway-server:
     #build: ./gateway/
     image: galileo/servicio-gateway-server:1.1.3
@@ -245,22 +253,6 @@ services:
       - 8090:8090
     restart: on-failure
     container_name: servicio-gateway-server
-    networks:
-      - galileo-network
-        #volumes:
-        #    - /home/countigo/galileo-artifacts/gateway-server.jar:/gateway-server.jar
-        #depends_on:
-        #- servicio-config-server
-        #- servicio-eureka-server
-        #- servicio-usuarios
-        #- servicio-oauth
-        #- servicio-unidades
-
-  servicio-trazabilidad:
-    #build: ./trazabilidad/
-    image: galileo/servicio-trazabilidad:1.1.3
-    restart: on-failure
-    container_name: servicio-trazabilidad
     networks:
       - galileo-network
 
