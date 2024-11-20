@@ -75,6 +75,14 @@ services:
     networks:
       - galileo-network
 
+  servicio-unidades:
+    build: ./unidades/
+    image: galileo/servicio-unidades:1.1.3
+    restart: on-failure
+    container_name: servicio-unidades
+    networks:
+      - galileo-network
+
   servicio-unidades-usuarios:
     build: ./unidadesusuarios/
     image: galileo/servicio-unidades-usuarios:1.1.3
@@ -120,14 +128,6 @@ services:
     image: galileo/servicio-apis:1.1.3
     restart: on-failure
     container_name: servicio-apis
-    networks:
-      - galileo-network
-
-  servicio-unidades:
-    build: ./unidades/
-    image: galileo/servicio-unidades:1.1.3
-    restart: on-failure
-    container_name: servicio-unidades
     networks:
       - galileo-network
 
