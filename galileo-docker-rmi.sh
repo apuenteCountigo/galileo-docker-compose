@@ -5,7 +5,7 @@ IMAGES_FILE="imagenes.txt"
 
 # Leer cada línea del archivo y ejecutar docker save para cada imagen
 while IFS= read -r IMAGE_NAME; do
-    if [ -n "${$IMAGE_NAME}:1.1.2" ]; then
+    if [ -n "$IMAGE_NAME:1.1.2" ]; then
         docker rmi -f "${IMAGE_NAME}":1.1.2
     else
         echo "Línea vacía o nombre de imagen no válido, omitiendo..."
