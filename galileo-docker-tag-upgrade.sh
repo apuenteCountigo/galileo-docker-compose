@@ -15,7 +15,7 @@ while IFS= read -r IMAGE_NAME; do
         CLEANED_NAME="${IMAGE_NAME#galileo/}"
         OUTPUT_FILE="${DEST_DIR}/${CLEANED_NAME}_1.1.3.tar.gz"
         docker tag "${IMAGE_NAME}":1.1.2 "${IMAGE_NAME}":1.1.3
-        echo "Guardando la imagen '$IMAGE_NAME':1.1.2 en '$OUTPUT_FILE'..."
+        echo "Guardando la imagen '$IMAGE_NAME':1.1.3 en '$OUTPUT_FILE'..."
         docker save -o "$OUTPUT_FILE" "${IMAGE_NAME}:1.1.3"
     else
         echo "Línea vacía o nombre de imagen no válido, omitiendo..."
