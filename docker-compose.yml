@@ -85,7 +85,7 @@ services:
 
   servicio-unidades-usuarios:
     build: ./unidadesusuarios/
-    image: galileo/servicio-unidades-usuarios:1.1.3
+    image: galileo/servicio-unidades-usuarios:1.1.4
     restart: unless-stopped
     container_name: servicio-unidades-usuarios
     networks:
@@ -125,7 +125,7 @@ services:
 
   servicio-apis:
     build: ./apis/
-    image: galileo/servicio-apis:1.1.3
+    image: galileo/servicio-apis:1.1.4
     restart: on-failure
     container_name: servicio-apis
     networks:
@@ -337,7 +337,7 @@ services:
     #   bash -c "while [ ! -f /app/build_complete ]; do sleep 2; done; nginx -g 'daemon off;'"
 
   servicio-web:
-    image: galileo/webapp:1.1.3
+    image: galileo/webapp:1.1.4
     build: ./web/galileo_servicio_web/
     depends_on:
       - web-build
