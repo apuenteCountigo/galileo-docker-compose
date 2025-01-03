@@ -191,7 +191,7 @@ services:
       - galileo-network
 
   servicio-permisos:
-    #build: ./permisos/
+    build: ./permisos/
     image: galileo/servicio-permisos:1.1.4
     restart: on-failure
     container_name: servicio-permisos
