@@ -10,7 +10,7 @@ mkdir -p "$DEST_DIR"
 
 # Leer cada línea del archivo y ejecutar docker save para cada imagen
 while IFS= read -r IMAGE_NAME; do
-    if [ -n "$IMAGE_NAME" ]; then
+    if [ -n "$IMAGE_NAME:1.1.3" ]; then
         # Eliminar el prefijo "galileo/" del nombre de la imagen
         CLEANED_NAME="${IMAGE_NAME#galileo/}"
         OUTPUT_FILE="${DEST_DIR}/${CLEANED_NAME}_1.1.4.tar.gz"
