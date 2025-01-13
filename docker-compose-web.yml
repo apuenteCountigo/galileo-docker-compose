@@ -1,0 +1,15 @@
+services:
+  servicio-web:
+    image: galileo/webapp:1.1.4
+    build: ./webapp/
+    container_name: webapp
+    restart: on-failure
+    ports:
+      - 8079:8079
+    networks:
+      - galileo-network
+
+networks:
+  galileo-network:
+    external: true
+    name: galileo-network

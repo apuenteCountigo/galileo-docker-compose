@@ -125,7 +125,7 @@ services:
 
   servicio-apis:
     build: ./apis/
-    image: galileo/servicio-apis:1.1.4
+    image: galileo/servicio-apis:1.1.5
     restart: on-failure
     container_name: servicio-apis
     networks:
@@ -300,56 +300,11 @@ services:
   #   networks:
   #     - galileo-network
 
-  web-build:
-    image: node:14
-    volumes:
-      - ./web/galileo_servicio_web:/app
-    working_dir: /app
-    networks:
-      - galileo-network
-    command: >
-      bash -c "rm -f /app/build_complete &&
-              echo  \"01-YESSSSSS******\" &&
-              npm install -g @angular/cli &&
-              npm install &&
-              echo  \"02-YESSSSSS******\" &&
-              npm run build --prod &&
-              echo  \"03-YESSSSSS******\" &&
-              touch build_complete"
-    healthcheck:
-      test: ["CMD", "test", "-f", "/app/build_complete"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
-      start_period: 5s
-    restart: 'no'
-
-  # servicio-web:
-  #   image: nginx:alpine
-  #   volumes:
-  #     - ./web/galileo_servicio_web/nginx.conf:/etc/nginx/nginx.conf
-  #     - ./web/galileo_servicio_web/dist/galileo-frontend:/usr/share/nginx/html
-  #     - ./web/galileo_servicio_web:/app  # Para acceder a 'build_complete'
-  #   depends_on:
-  #     - web-build
-  #   ports:
-  #     - "8079:8079"
-  #   networks:
-  #     - galileo-network
-    # command: >
-    #   bash -c "while [ ! -f /app/build_complete ]; do sleep 2; done; nginx -g 'daemon off;'"
-
   servicio-web:
     image: galileo/webapp:1.1.4
-    build: ./web/galileo_servicio_web/
-    # depends_on:
-    #   - web-build
+    build: ./webapp/
     container_name: webapp
     restart: on-failure
-    volumes:
-      - ./node_modules_cache:/app/node_modules
-      - ./dist_cache:/app/dist
-      - ./angular_cache:/app/.angular
     ports:
       - 8079:8079
     networks:
@@ -387,9 +342,6 @@ services:
 
 volumes:
   gitea_data:
-  node_modules_cache:
-  dist_cache:
-  angular_cache:
 
 networks:
   galileo-network:
