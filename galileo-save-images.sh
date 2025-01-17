@@ -13,9 +13,9 @@ while IFS= read -r IMAGE_NAME; do
     if [ -n "$IMAGE_NAME" ]; then
         # Eliminar el prefijo "galileo/" del nombre de la imagen
         CLEANED_NAME="${IMAGE_NAME#galileo/}"
-        OUTPUT_FILE="${DEST_DIR}/${CLEANED_NAME}_1.1.4.tar.gz"
-        echo "Guardando la imagen '$IMAGE_NAME':1.1.4 en '$OUTPUT_FILE'..."
-        docker save -o "$OUTPUT_FILE" "${IMAGE_NAME}:1.1.4"
+        OUTPUT_FILE="${DEST_DIR}/${CLEANED_NAME}_1.1.5.tar.gz"
+        echo "Guardando la imagen '$IMAGE_NAME':1.1.5 en '$OUTPUT_FILE'..."
+        docker save -o "$OUTPUT_FILE" "${IMAGE_NAME}:1.1.5"
     else
         echo "Línea vacía o nombre de imagen no válido, omitiendo..."
     fi

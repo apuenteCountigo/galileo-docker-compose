@@ -1,6 +1,6 @@
 services:
   servicio-web:
-    image: galileo/webapp:1.1.4
+    image: galileo/webapp:1.1.5
     build: ./webapp/
     container_name: webapp
     restart: on-failure
