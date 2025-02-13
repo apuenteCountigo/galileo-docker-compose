@@ -1,10 +1,10 @@
 galileo/servicio-operaciones
 galileo/servicio-objetivos
 galileo/webapp
-galileo/servicio-unidades-usuarios
-galileo/servicio-unidades
-galileo/servicio-balizas
 galileo/servicio-usuarios
+galileo/servicio-unidades
+galileo/servicio-unidades-usuarios
+galileo/servicio-balizas
 galileo/servicio-apis
 galileo/servicio-geocercas
 galileo/servicio-conexiones
@@ -13,6 +13,7 @@ galileo/servicio-importador
 galileo/servicio-oauth
 galileo/servicio-config-server
 galileo/servicio-eureka-server
+galileo/servicio-permisos
 galileo/servicio-gateway-server
 galileo/servicio-trazabilidad
 galileo/servicio-historicoobjetivosbalizas
@@ -23,5 +24,4 @@ galileo/servicio-tipobalizas
 galileo/servicio-perfiles
 galileo/servicio-tipocontratos
 galileo/servicio-empleos
-galileo/servicio-permisos
 galileo/servicio-provincias
