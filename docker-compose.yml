@@ -347,3 +347,4 @@ networks:
   galileo-network:
     external: true
     name: galileo-network
+    driver: bridge
